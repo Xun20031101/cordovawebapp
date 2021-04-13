@@ -1,0 +1,34 @@
+#include "motoWiFiEsp.h"
+
+#include <SoftwareSerial.h>
+
+SoftwareSerial esp8266_Serial(3,2);
+
+WiFiEspClient esp_client;
+
+int connect_status = WL_IDLE_STATUS;
+
+void setup()
+{
+  esp8266_Serial.begin(9600);
+
+    WiFi.reset(); 
+  esp8266_Serial.listen();
+  WiFi.init(&esp8266_Serial); 
+  if(WiFi.status()==WL_NO_SHIELD) {
+   Serial.println(F("Esp8266 module no present"));
+   while(true);
+   }
+  while(connect_status != WL_CONNECTED) {
+   Serial.println(F("Connect to router..."));
+   connect_status = WiFi.begin("","");
+  }
+
+}
+
+
+void loop()
+{
+    esp_client.print("https://thingspeak.com/channels/1349798/private_show");
+
+}
